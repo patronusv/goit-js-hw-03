@@ -11,6 +11,8 @@ const Transaction = {
 /*
  * Каждая транзакция это объект со свойствами: id, type и amount
  */
+let transactionID = 0;
+
 
 const account = {
   // Текущий баланс счета
@@ -24,7 +26,8 @@ const account = {
    * Принимает сумму и тип транзакции.
    */
   createTransaction(amount, type) {
-    const transactionItem = {
+      const transactionItem = {
+      id: ++transactionID,
       amount: amount,
       type: type,
     }
@@ -39,8 +42,10 @@ const account = {
    * после чего добавляет его в историю транзакций
    */
   deposit(amount) {
-    this.transactions.push(this.createTransaction(amount, Transaction.DEPOSIT));
+    let transaction = account.createTransaction(amount, Transaction.DEPOSIT);
+    account.transactions.push(transaction);
     this.balance += amount;
+    // this.transactions.push(this.createTransaction(amount, Transaction.DEPOSIT));
   },
 
   /*
@@ -53,11 +58,13 @@ const account = {
    * о том, что снятие такой суммы не возможно, недостаточно средств.
    */
   withdraw(amount) {
+    // this.balance >= amount ? ((let transaction = account.createTransaction(amount, Transaction.WITHDRAW)) && (account.transactions.push(transaction))) : alert('Not enough funds')
     if (this.balance >= amount) {
-       this.transactions.push(this.createTransaction(amount, Transaction.WITHDRAW));
-      this.balance -= amount;
-    } else {
-      this.balance;
+      let transaction = account.createTransaction(amount, Transaction.WITHDRAW);
+    account.transactions.push(transaction);
+    this.balance -= amount;
+      //  this.transactions.push(this.createTransaction(amount, Transaction.WITHDRAW));
+    } else {      
       alert('Not enough funds')
     }
       
@@ -75,7 +82,15 @@ const account = {
    * Метод ищет и возвращает объект транзации по id
    */
   getTransactionDetails(id) {
-    return this.transactions[id]
+    // return this.transactions[id]
+    for (const item of account.transactions) {
+      if (item.id === id) {
+        return item
+      } 
+      
+      //  item.id === id ? item : console.log(item);
+    }
+    return 'sorry, such ID not found';
   },
 
   /*
@@ -100,12 +115,15 @@ const account = {
 };
 console.group('account')
 account.deposit(20000);
+account.withdraw(15000);
 account.deposit(10000);
+account.deposit(55000);
+account.withdraw(15000);
 account.withdraw(15000);
 console.log('balance: ', account.getBalance()); 
 // account.createTransaction(2000, 'deposit')
 console.table(account.getTransactions());
-console.log(account.getTransactionDetails(1));
+console.log(account.getTransactionDetails(2));
 console.log('Deposit total: ', account.getTransactionTotal(Transaction.DEPOSIT));
 console.log('Withdraw total: ', account.getTransactionTotal(Transaction.WITHDRAW));
 console.groupEnd()
