@@ -106,5 +106,6 @@ console.log('balance: ', account.getBalance());
 // account.createTransaction(2000, 'deposit')
 console.table(account.getTransactions());
 console.log(account.getTransactionDetails(1));
-console.log(account.getTransactionTotal(Transaction.DEPOSIT));
+console.log('Deposit total: ', account.getTransactionTotal(Transaction.DEPOSIT));
+console.log('Withdraw total: ', account.getTransactionTotal(Transaction.WITHDRAW));
 console.groupEnd()
